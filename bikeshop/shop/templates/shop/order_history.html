@@ -1,0 +1,49 @@
+{% extends 'base.html' %}
+
+{% block title %}Мої замовлення | BikeShop{% endblock %}
+
+{% block content %}
+<div class="container my-4">
+    <h2>Мої замовлення</h2>
+
+    {% if orders %}
+    <div class="table-responsive">
+        <table class="table table-hover align-middle">
+            <thead>
+                <tr>
+                    <th>№</th>
+                    <th>Дата</th>
+                    <th>Сума</th>
+                    <th>Статус</th>
+                    <th>Дії</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for order in orders %}
+                <tr>
+                    <td>#{{ order.id }}</td>
+                    <td>{{ order.created_at|date:"d.m.Y H:i" }}</td>
+                    <td>{{ order.total|floatformat:2 }} грн</td>
+                    <td>
+                        {# Виводимо badge з кольором, що повертає метод get_status_badge #}
+                        <span class="badge bg-{{ order.get_status_badge|default:'secondary' }}">
+                            {{ order.get_status_display|default:"Не визначено" }}
+                        </span>
+                    </td>
+                    <td>
+                        <a href="{% url 'order_detail' order.id %}" class="btn btn-sm btn-outline-primary">
+                            Деталі
+                        </a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% else %}
+    <div class="alert alert-info">
+        У вас ще немає замовлень
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

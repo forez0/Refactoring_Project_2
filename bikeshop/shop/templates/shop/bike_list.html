@@ -1,0 +1,46 @@
+{% extends 'base.html' %}
+
+{% block title %}Каталог велосипедів | BikeShop{% endblock %}
+
+{% block content %}
+<div class="row mb-4">
+    <div class="col-12">
+        <h1 class="display-6">Каталог велосипедів</h1>
+        <div class="btn-group" role="group" aria-label="Фільтр за типом велосипеда">
+            <a href="?type=all" class="btn btn-outline-secondary {% if not active_type %}active{% endif %}">Всі</a>
+            {% for type in bike_types %}
+            <a href="?type={{ type.id }}" class="btn btn-outline-secondary {% if active_type and type.id == active_type.id %}active{% endif %}">
+                {{ type.name }}
+            </a>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+
+<div class="row row-cols-1 row-cols-md-3 g-4">
+    {% for bike in bikes %}
+    <div class="col">
+        <div class="card h-100">
+            <img src="{{ bike.image.url }}" class="card-img-top" alt="{{ bike.name }}">
+            <div class="card-body">
+                <h5 class="card-title">{{ bike.name }}</h5>
+                <p class="card-text">{{ bike.description|truncatechars:100 }}</p>
+                <p class="text-muted">{{ bike.get_specifics }}</p>
+            </div>
+            <div class="card-footer bg-white">
+                <div class="d-flex justify-content-between align-items-center">
+                    <span class="h5 mb-0">{{ bike.price }} грн</span>
+                    <a href="{% url 'shop:create_order' bike.id %}" class="btn btn-primary">
+                        <i class="bi bi-cart-plus"></i> Замовити
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% empty %}
+    <div class="col-12">
+        <div class="alert alert-info">Велосипедів не знайдено</div>
+    </div>
+    {% endfor %}
+</div>
+{% endblock %}
